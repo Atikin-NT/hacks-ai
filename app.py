@@ -1,8 +1,13 @@
 from flask import Flask, jsonify, render_template
+# from ml import MLoper
+import json
 
 import configparser
 config = configparser.ConfigParser()
 config.read('./config.ini')
+ml_config = config['ml']
+
+# predict_model = MLoper(ml_config['weights_path'])
 
 app = Flask(__name__)
 
@@ -15,12 +20,39 @@ json_template = {
 def check():
     return jsonify(json_template)
 
-@app.route('/api/v1.0/get', methods=['GET'])
-def get():
+@app.route('/api/v1.0/get_station_list', methods=['GET'])
+def get_station_list():
     answer = json_template.copy()
 
-    # операции с answer
+    with open('./shedule.json', 'r') as file:
+        data = json.load(file)
     
+    answer['data'] = data['station_list']
+    
+    return jsonify(answer)
+
+
+@app.route('/api/v1.0/get_shedule_by_station/<int:station_id>', methods=['GET'])
+def get_shedule_by_stationet(station_id: int):
+    """вывод расписания по id станции
+
+    Args:
+        station_id (int): id станции
+
+    Returns:
+        _type_: список состоящий из расписания
+    """
+    answer = json_template.copy()
+
+    with open('./shedule.json', 'r') as file:
+        data = json.load(file)
+
+    shedule = data['shedule']
+    answer['data'] = []
+    for train_time in shedule:
+        if train_time['st'] == station_id:
+            answer['data'].append(train_time)
+
     return jsonify(answer)
 
 @app.route('/api/v1.0/post', methods=['POST'])
