@@ -110,3 +110,24 @@
   .bd-mode-toggle {
     z-index: 1500;
   }
+
+
+  #time {
+    overflow-x: hidden;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+  .timeButton {
+    max-height: 2.5em;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 0.5em;
+  }
+
+  .income {
+    background-color: #9AF072;
+  }
+  .outcome {
+    background-color: #EA854C;
+  }
