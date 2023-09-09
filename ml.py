@@ -5,9 +5,10 @@ import json
 import copy
 
 class MLoper():
-    def __init__(self, model_file):
+    def __init__(self, model_file, data_path):
         self.model = keras.models.load_model(model_file)
         self.TRAIN_INTERVAL = 2
+        self.data_path = data_path
 
     def _get_train_leave(self, time, st, count, train_to_time, stations):
         res = []
@@ -79,8 +80,11 @@ class MLoper():
         return train_onboard, train_time, stations, 
 
 
-    def generate_sheduke(self, init_data_path: str):
-        with open(f'./{init_data_path}', 'r') as file:
+    def set_data_path(self, data_path):
+        self.data_path = data_path
+
+    def generate_sheduke(self):
+        with open(f'./{self.data_path}', 'r') as file:
             data = json.load(file)
 
         data = data[0]
@@ -99,8 +103,6 @@ class MLoper():
 
 
     def shedule_cost_res(self, train_onboard, train_time, stations, data):
-        # train_onboard = copy.deepcopy(train_onboard_main)
-        # train_time = copy.deepcopy(train_to_time)
         new_stations = stations
 
         for st in new_stations:  # добавляем время простоя каждого вагона
@@ -111,7 +113,7 @@ class MLoper():
             time = train['time']
             train['onboard'] = [0] * len(new_stations)
             station = train['st'] - 1
-            if train['free_carriage'] is None:  # если было прибытие поезда
+            if train['free_carriage'] is None:  # если было прибытие поезда (прибытие = ничего не отвозим)
                 for vagon_type in range(len(new_stations)):
                     train['onboard'][vagon_type] = copy.deepcopy(train_onboard[train['id']][vagon_type])
                     if vagon_type != station:  # если вагоны приехали не сюда, то считаем
@@ -120,24 +122,13 @@ class MLoper():
                 continue
             
             # если было отбытие поезда
-            # station_resources = copy.deepcopy(new_stations[station][:len(new_stations)])
-            # total_export = [sum(st[:len(new_stations)]) for st in new_stations]
-            # total_import = get_total_import(new_stations)
-            # coming_trains_info = get_train_comes(time, station, TRAIN_INTERVAL, train_onboard)
-            # leaving_trains_info = get_train_leave(time, station, TRAIN_INTERVAL)
+            station_resources = new_stations[station][:len(new_stations)]
+            total_export = [sum(st[:len(new_stations)]) for st in new_stations]
+            total_import = self._get_total_import(new_stations)
+            coming_trains_info = self._get_train_comes(time, station, self.TRAIN_INTERVAL, train_onboard)
+            leaving_trains_info = self._get_train_leave(time, station, self.TRAIN_INTERVAL)
 
-            # pred = self.model.predict([*station_resources, *total_export, *total_import, *coming_trains_info, *leaving_trains_info])[0]
-
-
-
-            enter = copy.deepcopy(new_stations[station][:len(new_stations)])
-            enter += [sum(st[:len(new_stations)]) for st in new_stations]
-            enter += self._get_total_import(new_stations)
-            enter += self._get_train_comes(time, station, self.TRAIN_INTERVAL, train_onboard, train_time, stations)
-            enter += self._get_train_leave(time, station, self.TRAIN_INTERVAL, train_time, stations)
-            pred = self.model.predict([enter])[0]
-
-
+            pred = self.model.predict([[*station_resources, *total_export, *total_import, *coming_trains_info, *leaving_trains_info]])[0]
 
             onboard_val = 0
             for _ in range(len(pred)):

@@ -1,15 +1,28 @@
-from flask import Flask, jsonify, render_template
+from flask import Flask, jsonify, render_template, request, redirect, url_for
 from ml import MLoper
 import json
+import os
+
+
+# объясняется ниже
+from werkzeug.utils import secure_filename
+
+# папка для сохранения загруженных файлов
+UPLOAD_FOLDER = './data_sience/'
+# расширения файлов, которые разрешено загружать
+ALLOWED_EXTENSIONS = {'json'}
+
 
 import configparser
 config = configparser.ConfigParser()
 config.read('./config.ini')
 ml_config = config['ml']
 
-predict_model = MLoper("./data_sience/pop_4_gen_14.keras")
+predict_model = MLoper("./data_sience/pop_4_gen_14.keras", "./data_sience/real_data.json")
 
 app = Flask(__name__)
+
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 json_template = {
     'status': True,
@@ -55,6 +68,34 @@ def get_shedule_by_stationet(station_id: int):
 
     return jsonify(answer)
 
+
+def allowed_file(filename):
+    """ Функция проверки расширения файла """
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+@app.route('/api/v1.0/put_data', methods=['PUT'])
+def put_data():
+    answer = json_template.copy()
+
+    if 'file' not in request.files:
+        answer['data'] = 'Не могу прочитать файл'
+        answer['status'] = False
+        return redirect(request.url)
+    file = request.files['file']
+    if file.filename == '':
+        answer['data'] = 'Нет выбранного файла'
+        answer['status'] = False
+        return redirect(request.url)
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        predict_model.set_data_path(filename)
+        answer['data'] = filename
+        answer['status'] = True
+    return jsonify(answer)
+
 @app.route('/api/v1.0/post', methods=['POST'])
 def post():
     answer = json_template.copy()
@@ -71,5 +112,5 @@ def main():
     return render_template('main.html')
 
 if __name__ == '__main__':
-    predict_model.generate_sheduke("./data_sience/real_data.json")
+    predict_model.generate_sheduke()
     app.run()
