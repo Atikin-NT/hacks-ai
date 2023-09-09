@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, render_template
-# from ml import MLoper
+from ml import MLoper
 import json
 
 import configparser
@@ -7,7 +7,7 @@ config = configparser.ConfigParser()
 config.read('./config.ini')
 ml_config = config['ml']
 
-# predict_model = MLoper(ml_config['weights_path'])
+predict_model = MLoper("./data_sience/pop_4_gen_14.keras")
 
 app = Flask(__name__)
 
@@ -15,7 +15,7 @@ json_template = {
     'status': True,
     'data': ''
 }
- 
+
 @app.route('/api/v1.0/check', methods=['GET'])
 def check():
     return jsonify(json_template)
@@ -71,4 +71,5 @@ def main():
     return render_template('main.html')
 
 if __name__ == '__main__':
+    predict_model.generate_sheduke("./data_sience/real_data.json")
     app.run()
