@@ -1,10 +1,6 @@
 {
     "station_list": [
         {
-            "id": 0,
-            "name": "Златоуст"
-        },
-        {
             "id": 1,
             "name": "Кыштым"
         },
@@ -24,9 +20,9 @@
         {"id": 1, "time": 240, "st": 2, "free_carriage": 10, "onboard": [0, 1, 4, 5]},
         {"id": 1, "time": 444, "st": 3, "free_carriage": null, "onboard": [7, 0, 4, 0]},
         {"id": 0, "time": 448, "st": 3, "free_carriage": null, "onboard": [0, 10, 4, 0]},
-        {"id": 1, "time": 609, "st": 3, "free_carriage": null, "onboard": [0, 1, 4, 10]},
+        {"id": 1, "time": 609, "st": 3, "free_carriage": 21, "onboard": [0, 1, 4, 10]},
         {"id": 0, "time": 611, "st": 3, "free_carriage": 21, "onboard": [0, 1, 4, 5]},
         {"id": 0, "time": 1335, "st": 2, "free_carriage": null, "onboard": [3, 1, 2, 0]},
-        {"id": 0, "time": 1358, "st": 2, "free_carriage": null, "onboard": [0, 5, 4, 5]}
+        {"id": 0, "time": 1358, "st": 2, "free_carriage": 21, "onboard": [0, 5, 4, 5]}
     ]
 }

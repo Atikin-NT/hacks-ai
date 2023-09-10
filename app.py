@@ -5,7 +5,7 @@ import json
 import configparser
 config = configparser.ConfigParser()
 config.read('./config.ini')
-ml_config = config['ml']
+# ml_config = config['ml']
 
 # predict_model = MLoper(ml_config['weights_path'])
 
@@ -28,7 +28,6 @@ def get_station_list():
         data = json.load(file)
     
     answer['data'] = data['station_list']
-    
     return jsonify(answer)
 
 
