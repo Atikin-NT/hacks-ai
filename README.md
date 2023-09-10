@@ -14,6 +14,13 @@
 ![web](web.png) \
 Реализован на чистом JS + HTML + CSS. Представляет собой минимальную визуализацию сформированного расписания.
 
+### Запуск
+```
+git clone https://github.com/Atikin-NT/hacks-ai.git
+cd hacks-ai
+pip install flask, numpy, tensorflow
+python .\app.py
+```
 ---
 
 ### Юзер стори 1: 
