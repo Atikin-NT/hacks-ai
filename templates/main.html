@@ -55,8 +55,9 @@
           <div id="myDropdown" class="dropdown-content"></div>
         </div>
         <div class="newDataSet">
-            <form id="myForm" method="GET" enctype=multipart/form-data action="/api/v1.0/put_data">
-                <input type="file" id="upload-file">
+            <form id="myForm" method="POST" action="/api/v1.0/put_data">
+                <label for="file">File</label>
+                <input type="file" id="upload-file" name="file">
                 <button>Установить данные</button>
             </form>
         </div>
