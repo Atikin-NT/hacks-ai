@@ -139,7 +139,11 @@
 
 .income {
   background-color: #9AF072;
+  border-radius: 5px;
+  padding-left: 10px;
 }
 .outcome {
   background-color: #EA854C;
+  border-radius: 5px;
+  padding-left: 10px;
 }

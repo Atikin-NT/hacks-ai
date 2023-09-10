@@ -103,6 +103,8 @@ function shawRecommendations() {
     console.log(incomingTrain);
     console.log(outcomingTrain);
 
+    const idParentTrain = outcomingTrain.id;
+
     incomingTrain = incomingTrain.onboard;
     outcomingTrain = outcomingTrain.onboard;
 
@@ -131,14 +133,15 @@ function shawRecommendations() {
         let param = dictOut.find(el => el.name == name);
         param = param? param.count : 0;
         const tmp = dictIn[j].count - param;
-        if (tmp > 0) detach.push(name);
+        console.log(dictIn[j]);
+        if (tmp > 0) detach.push({name: name, count: tmp, trainParent: idParentTrain});
     }
     for (let j = 0; j < dictOut.length; j++) {
         const name = dictOut[j].name;
         let param = dictIn.find(el => el.name == name);
         param = param? param.count : 0;
         const tmp = dictOut[j].count - param;
-        if (tmp > 0) attach.push(name);
+        if (tmp > 0) attach.push({name: name, count: tmp, trainParent: idParentTrain});
     }
 
     console.log(detach);
@@ -146,26 +149,39 @@ function shawRecommendations() {
     showTasks(detach, attach);
 }
 
+function createIncome(name, count, parent) {
+    const divIncome = document.createElement("div");
+    divIncome.classList.add("income", "col-md-12");
+    const pIn = document.createElement("p");
+    pIn.textContent = `Присоединить ${count} вагон(ов) следующих до станции ${name} локомативом ${parent}`;
+    divIncome.appendChild(pIn);
+    return divIncome;
+}
+
+function createOutcome(name, count, parent) {
+    const divOutcome = document.createElement("div");
+    divOutcome.classList.add("outcome", "col-md-12");
+    const pOut = document.createElement("p");
+    pOut.textContent = `Отсоединить ${count} вагон(ов) следующих до станции ${name} локомативом ${parent}`;
+    divOutcome.appendChild(pOut);
+    return divOutcome;
+}
+
 function showTasks(detach, attach) {
     const recommendations = document.getElementById("recommendations");
 
-    const divIncome = document.createElement("div");
-    const divOutcome = document.createElement("div");
+    console.log(detach);
+    console.log(attach);
 
-    divIncome.classList.add("income", "col-md-12");
-    divOutcome.classList.add("outcome", "col-md-12");
+    for (let i = 0; i < detach.length; i++) {
+        const divIncome = createIncome(detach[i].name, detach[i].count, detach[i].trainParent);
+        recommendations.appendChild(divIncome);
+    }
 
-    const pIn = document.createElement("p");
-    const pOut = document.createElement("p");
-
-    pIn.textContent = detach;
-    pOut.textContent = attach;
-
-    divIncome.appendChild(pIn);
-    divOutcome.appendChild(pOut);
-
-    recommendations.appendChild(divIncome);
-    recommendations.appendChild(divOutcome);
+    for (let i = 0; i < attach.length; i++) {
+        const divOutcome = createOutcome(attach[i].name, attach[i].count, attach[i].trainParent);
+        recommendations.appendChild(divOutcome);
+    }
 }
 
 function getImport(station) {
