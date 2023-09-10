@@ -15,12 +15,22 @@
 Реализован на чистом JS + HTML + CSS. Представляет собой минимальную визуализацию сформированного расписания.
 
 ### Запуск
-```
+Первый вариант в ручную. 
+> **Предупреждение**. Пакет около 1 Гб, будет долго устанавливаться
+```bash
 git clone https://github.com/Atikin-NT/hacks-ai.git
 cd hacks-ai
 pip install flask, numpy, tensorflow
 python .\app.py
 ```
+
+Второй способо с помощью докер
+```bash
+sudo docker image build -t flask_docker .
+sudo docker run -p 5000:5000 -d flask_docker
+```
+
+После этих команд на 5000 порту локальной сети вам будет доступен сайт
 ---
 
 ### Юзер стори 1: 
