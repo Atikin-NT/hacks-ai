@@ -50,11 +50,16 @@
 <main>
   <div class="container py-4">
     <header class="pb-3 mb-4 border-bottom">
-      <div class="dropdown">
+        <div class="dropdown">
           <button onclick="myFunction()" class="dropbtn">Станция</button>
-          <div id="myDropdown" class="dropdown-content">
-          </div>
-      </div>
+          <div id="myDropdown" class="dropdown-content"></div>
+        </div>
+        <div class="newDataSet">
+            <form id="myForm" method="GET" enctype=multipart/form-data action="/api/v1.0/put_data">
+                <input type="file" id="upload-file">
+                <button>Установить данные</button>
+            </form>
+        </div>
     </header>
 
     <div class="row align-items-md-stretch">
