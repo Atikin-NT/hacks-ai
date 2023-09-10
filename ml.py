@@ -125,8 +125,8 @@ class MLoper():
             station_resources = new_stations[station][:len(new_stations)]
             total_export = [sum(st[:len(new_stations)]) for st in new_stations]
             total_import = self._get_total_import(new_stations)
-            coming_trains_info = self._get_train_comes(time, station, self.TRAIN_INTERVAL, train_onboard)
-            leaving_trains_info = self._get_train_leave(time, station, self.TRAIN_INTERVAL)
+            coming_trains_info = self._get_train_comes(time, station, self.TRAIN_INTERVAL, train_onboard, train_time, stations)
+            leaving_trains_info = self._get_train_leave(time, station, self.TRAIN_INTERVAL, train_time, stations)
 
             pred = self.model.predict([[*station_resources, *total_export, *total_import, *coming_trains_info, *leaving_trains_info]])[0]
 

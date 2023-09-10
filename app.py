@@ -18,7 +18,7 @@ config = configparser.ConfigParser()
 config.read('./config.ini')
 # ml_config = config['ml']
 
-predict_model = MLoper("./data_sience/pop_4_gen_14.keras", "./data_sience/real_data.json")
+predict_model = MLoper("./data_sience/pop_20_gen_40.keras", "./data_sience/real_data.json")
 
 app = Flask(__name__)
 
