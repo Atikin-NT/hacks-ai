@@ -16,7 +16,7 @@ ALLOWED_EXTENSIONS = {'json'}
 import configparser
 config = configparser.ConfigParser()
 config.read('./config.ini')
-ml_config = config['ml']
+# ml_config = config['ml']
 
 predict_model = MLoper("./data_sience/pop_4_gen_14.keras", "./data_sience/real_data.json")
 
@@ -41,7 +41,6 @@ def get_station_list():
         data = json.load(file)
     
     answer['data'] = data['station_list']
-    
     return jsonify(answer)
 
 
