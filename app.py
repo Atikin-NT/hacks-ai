@@ -74,25 +74,30 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-@app.route('/api/v1.0/put_data', methods=['PUT'])
+@app.route('/api/v1.0/put_data', methods=['POST'])
 def put_data():
     answer = json_template.copy()
-
+    # print(request)
+    
+    # print(request.args)
     if 'file' not in request.files:
         answer['data'] = 'Не могу прочитать файл'
         answer['status'] = False
-        return redirect(request.url)
+        print('Не могу прочитать файл')
+        return redirect("/")
     file = request.files['file']
     if file.filename == '':
         answer['data'] = 'Нет выбранного файла'
         answer['status'] = False
-        return redirect(request.url)
+        print('Нет выбранного файла')
+        return redirect("/")
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         predict_model.set_data_path(filename)
         answer['data'] = filename
         answer['status'] = True
+        print('Файл загружен')
     return jsonify(answer)
 
 @app.route('/api/v1.0/post', methods=['POST'])
